@@ -5,7 +5,7 @@
 		<meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta charset="utf-8">
 
-		<title>Process Flow</title>
+		<title>Multiple Root Nodes</title>
 
 		<script id="sap-ui-bootstrap"
 			src="https://sapui5.hana.ondemand.com/resources/sap-ui-core.js"
@@ -14,7 +14,7 @@
 			data-sap-ui-xx-bindingSyntax="complex"
 			data-sap-ui-preload="async"
 			data-sap-ui-compatVersion="edge"
-			data-sap-ui-resourceroots='{"sap.suite.ui.commons.sample.ProcessFlow": "./", "sap.ui.demo.mock": "mockdata"}'>
+			data-sap-ui-resourceroots='{"sap.suite.ui.commons.sample.ProcessFlowMultipleRootNodes": "./", "sap.ui.demo.mock": "mockdata"}'>
 		</script>
 
 		<!-- Application launch configuration -->
@@ -25,13 +25,13 @@
 				new sap.m.App ({
 					pages : [
 						new sap.m.Page({
-							title : "Process Flow",
+							title : "Multiple Root Nodes",
 							enableScrolling : true,
 							content : [
 								new sap.ui.core.ComponentContainer({
-									name : "sap.suite.ui.commons.sample.ProcessFlow",
+									name : "sap.suite.ui.commons.sample.ProcessFlowMultipleRootNodes",
 									settings : {
-										id : "sap.suite.ui.commons.sample.ProcessFlow"
+										id : "sap.suite.ui.commons.sample.ProcessFlowMultipleRootNodes"
 									}
 								})
 							]

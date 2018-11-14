@@ -1,61 +1,46 @@
-sap.ui.define([ 'jquery.sap.global', 'sap/suite/ui/commons/library', 'sap/ui/core/mvc/Controller', 'sap/ui/model/json/JSONModel', 'sap/m/MessageToast' ],
-	function(jQuery, SuiteLibrary, Controller, JSONModel, MessageToast) {
+sap.ui.define([ 'jquery.sap.global', 'sap/ui/core/mvc/Controller', 'sap/ui/model/json/JSONModel', 'sap/m/MessageToast' ],
+	function(jQuery, Controller, JSONModel, MessageToast) {
 	"use strict";
 
-	return Controller.extend("sap.suite.ui.commons.sample.ProcessFlow.ProcessFlow", {
-		onInit: function() {
-			var oView = this.getView();
-			this.oProcessFlow1 = oView.byId("processflow1");
-			this.oProcessFlow2 = oView.byId("processflow2");
+	return Controller.extend("sap.suite.ui.commons.sample.ProcessFlowMultipleRootNodes.ProcessFlow", {
+		onInit: function () {
+			var oDataPath = jQuery.sap.getModulePath("sap.suite.ui.commons.sample.ProcessFlowMultipleRootNodes", "/ProcessFlowNodes.json");
+			var oModel = new JSONModel(oDataPath);
 
-			var sDataPath = jQuery.sap.getModulePath("sap.suite.ui.commons.sample.ProcessFlow", "/ProcessFlowLanesAndNodes.json");
-			var oModelPf1 = new JSONModel(sDataPath);
-			oView.setModel(oModelPf1);
-			oModelPf1.attachRequestCompleted(this.oProcessFlow1.updateModel.bind(this.oProcessFlow1));
+			this.oProcessFlow = this.getView().byId("processflow");
+			oModel.attachRequestCompleted(this.oProcessFlow.updateModel.bind(this.oProcessFlow));
 
-			sDataPath = jQuery.sap.getModulePath("sap.suite.ui.commons.sample.ProcessFlow", "/ProcessFlowLanesOnly.json");
-			var oModelPf2 = new JSONModel(sDataPath);
-			oView.setModel(oModelPf2, "pf2");
-			oModelPf2.attachRequestCompleted(this.oProcessFlow2.updateModel.bind(this.oProcessFlow2));
+			this.getView().setModel(oModel);
 		},
 
-		onOnError: function(event) {
-			MessageToast.show("Exception occurred: " + event.getParameters().text);
+		onHighlightPath: function(oEvent) {
+			var sDataPath;
+			var oModel = this.oProcessFlow.getModel();
+			if (oEvent.getParameter("pressed")) {
+				sDataPath = jQuery.sap.getModulePath("sap.suite.ui.commons.sample.ProcessFlowMultipleRootNodes", "/ProcessFlowNodesHighlighted.json");
+				MessageToast.show("Path has been highlighted");
+			} else {
+				sDataPath = jQuery.sap.getModulePath("sap.suite.ui.commons.sample.ProcessFlowMultipleRootNodes", "/ProcessFlowNodes.json");
+				MessageToast.show("Path highlighting has been reset.");
+			}
+			oModel.loadData(sDataPath);
 		},
 
-		onHeaderPress: function(event) {
-			var sDataPath = jQuery.sap.getModulePath("sap.suite.ui.commons.sample.ProcessFlow", "/ProcessFlowNodes.json");
-			this.getView().getModel("pf2").loadData(sDataPath);
+		onOptimizeLayout: function(oEvent) {
+			this.oProcessFlow.optimizeLayout(oEvent.getSource().getPressed());
+			MessageToast.show("Layout was " + (oEvent.getSource().getPressed() ? "optimized." : "brought back to its initial state."));
 		},
 
-		onNodePress: function(event) {
-			MessageToast.show("Node " + event.getParameters().getNodeId() + " has been clicked.");
+		onZoomIn: function() {
+			this.oProcessFlow.zoomIn();
+
+			MessageToast.show("Zoom level changed to: " + this.oProcessFlow.getZoomLevel());
 		},
 
-		onZoomIn: function () {
-			this.oProcessFlow1.zoomIn();
+		onZoomOut: function() {
+			this.oProcessFlow.zoomOut();
 
-			MessageToast.show("Zoom level changed to: " + this.oProcessFlow1.getZoomLevel());
-		},
-
-		onZoomOut: function () {
-			this.oProcessFlow1.zoomOut();
-
-			MessageToast.show("Zoom level changed to: " + this.oProcessFlow1.getZoomLevel());
-		},
-
-		onHighlightPath: function() {
-			var sDataPath = jQuery.sap.getModulePath("sap.suite.ui.commons.sample.ProcessFlow", "/ProcessFlowNodesHighlightedNodes.json");
-			this.getView().getModel().loadData(sDataPath);
-
-			MessageToast.show("Path has been highlighted");
-		},
-
-		onUpdateModel: function() {
-			var sDataPath = jQuery.sap.getModulePath("sap.suite.ui.commons.sample.ProcessFlow", "/ProcessFlowUpdateModel.json");
-
-			this.getView().getModel().loadData(sDataPath);
-			MessageToast.show("Model has been updated");
+			MessageToast.show("Zoom level changed to: " + this.oProcessFlow.getZoomLevel());
 		}
 	});
 });

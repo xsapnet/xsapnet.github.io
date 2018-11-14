@@ -261,7 +261,7 @@
 			"title": "Market",
 			"icon": "sap-icon://e-care",
 			"group": "V",
-			"status": "Warning"
+			"status": "Error"
 		}
 		
 	],
